@@ -16,7 +16,8 @@
                             <TextBox Text="{Binding Name}" Margin="10,0" Width="150" ></TextBox>
                             <TextBox Text="{Binding Url}" Margin="10,0" Width="150" ></TextBox>
                             <ComboBox ItemsSource="{Binding AllEpisodes}" SelectedItem="{Binding CurrentEpisode, Mode=TwoWay}" Margin="10,0" Width="150" ></ComboBox>
-
+                            <ComboBox ItemsSource="{Binding AllEpisodes}" SelectedItem="{Binding NextEpisode, Mode=TwoWay}" Margin="10,0" Width="150" ></ComboBox>
+                            <Button Command="{Binding Command}" Content="play next" Width="150" Margin="10,0" ></Button>
                         </StackPanel>
                     </DataTemplate>
             </ListBox.ItemTemplate>          

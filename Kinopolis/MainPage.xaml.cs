@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Net.Http;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -35,6 +36,7 @@ namespace Kinopolis
 
            _serien = new List<Serie>();
             Serie serie1 = new Serie("name", "url");
+            serie1.Command.ButtonClicked += ButtonClickedEvent;
             for (int i = 1; i< 4; i++)
             {
                 serie1.AddEpisode(1, i);
@@ -47,6 +49,45 @@ namespace Kinopolis
             episodes.ItemsSource = _serien;
         }
 
+        private void ButtonClickedEvent(object sender, EventArgs e)
+        {
+            var command = sender as PlayNextCommand;
+            var serie = command.Serie;
+
+            try
+            {
+                string nextEpisode = serie.NextEpisode;
+                if (nextEpisode == "none")
+                    output.Text = "keine neue Folge da";
+                else
+                {
+                    //aufruf an kinox seite schicken mit: 
+                    // - staffel + episode zum selecten
+                    // li anklicken -- event auslösen
+                    // gleich alle mirrors testen?
+                    // script ausführen? 
+                    // link schnappen -> seite öffnen
+
+                    HttpClient client = new HttpClient();
+                    var postData = new List<KeyValuePair<string, string>>();
+                    postData.Add(new KeyValuePair<string, string>("param1", "value"));
+                    postData.Add(new KeyValuePair<string, string>("param2", "value"));
+
+                    HttpContent content = new FormUrlEncodedContent(postData);
+
+                    var response =  client.PostAsync("Post URL", content).Result;
+
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var noooo = ex.Message;
+            }
+        }
+
         private void SetUrlClick(object sender, RoutedEventArgs e)
         {
            // String url = requiredUrl.Text;
@@ -57,6 +98,7 @@ namespace Kinopolis
                 HtmlHandler HtmlHandler = new HtmlHandler(url);
                 int _maxEpisodes = 0;
                 Serie serie1 = new Serie("name1", url);
+                serie1.Command.ButtonClicked += ButtonClickedEvent;
                 for (int i = 1; i <= HtmlHandler.Seasons; i++)
                 {
                     HtmlHandler.MaxEpisodesInSeason.TryGetValue(i, out _maxEpisodes);
@@ -66,6 +108,9 @@ namespace Kinopolis
 
                     }
                     serie1.SetCurrtentEpisode(1, 1);
+                    serie1.SetNextEpisode(1, 2);
+                    
+                  
                 };
                 IList<Serie> newseries = new List<Serie>();
                 foreach (Serie series in _serien)
@@ -76,7 +121,6 @@ namespace Kinopolis
 
                 episodes.ItemsSource = newseries;
                 _serien = newseries;
-                //output.Text = HtmlHandler.HtmlLines.GetSiu.ToString(); 
             }
             catch (Exception ex)
             {

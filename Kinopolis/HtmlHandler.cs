@@ -56,7 +56,7 @@ namespace Kinopolis
                         break;
                     }                  
                     this.MaxEpisodesInSeason.Add(season, episode);
-                        i++;
+                    i++;
                     }
                     break;
                 }
